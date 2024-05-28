@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificate List</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+<h1>IT CERTIFICATE MANAGEMENT</h1>
+<hr>
+
+<div class="container">
+    <h2>Certification Form</h2>
+    <form id="certificationForm" th:action="@{/saveCertificate}" th:object="${certificate}" method="post">
+        <div class="form-group">
+            <label for="certificationId">ID:</label>
+            <input type="text" id="certificationId" required th:field="*{id}">
+        </div>
+        <div class="form-group">
+            <label for="certificationName">Certification Name:</label>
+            <input type="text" id="certificationName" required th:field="*{certificationName}">
+        </div>
+        <div class="form-group">
+            <label for="cost">Cost:</label>
+            <input type="number" id="cost" required th:field="*{cost}">
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="text" id="category" required th:field="*{category}">
+        </div>
+        <div class="button-group">
+            <button type="submit">Add</button>
+            <button type="button">Load</button>
+        </div>
+    </form>
+</div>
+<table id="customers">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Certification name</th>
+        <th>Cost ($)</th>
+        <th>Category</th>
+        <th>Delete/Update</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="certificate : ${certificateLists}">
+        <td th:text="${certificate.id}"></td>
+        <td th:text="${certificate.certificationName}"></td>
+        <td th:text="${certificate.cost}"></td>
+        <td th:text="${certificate.category}"></td>
+        <td>
+            <a th:href="@{/deleteCertificate/{id}(id=${certificate.id})}">Delete</a>
+            <a th:href="@{/showUpdate/{id}(id=${certificate.id})}">Update</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${totalPage > 1}" class="pagination-container">
+    <div class="total-rows">
+        Total Rows: [[${totalElement}]]
+    </div>
+
+    <div class="pagination-controls">
+        <a th:if="${currentPage >= 1}" th:href="@{'/?page=' + ${currentPage - 1}}">&lt;</a>
+        <span th:unless="${currentPage != 0}" class="disabled">&lt;</span>
+
+        <div class="pagination-page-numbers">
+            <span th:each="i: ${#numbers.sequence(1, totalPage)}">
+                <a th:if="${currentPage != i - 1}" th:href="@{'/?page=' + ${i - 1}}">[[${i}]]</a>
+                <span th:unless="${currentPage != i - 1}" class="current">[[${i}]]</span> &nbsp; &nbsp;
+            </span>
+        </div>
+
+        <a th:if="${currentPage < totalPage - 1}" th:href="@{'/?page=' + ${currentPage + 1}}">&gt;</a>
+        <span th:unless="${currentPage < totalPage - 1}" class="disabled">&gt;</span>
+    </div>
+</div>
+</body>
+</html>
